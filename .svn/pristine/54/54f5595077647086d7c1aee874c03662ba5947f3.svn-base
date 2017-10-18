@@ -1,0 +1,36 @@
+package uu.mas.strategy;
+
+import uu.mas.game.GameResult;
+import uu.mas.message.TournamentMessage;
+import uu.mas.tournament.TournamentResult;
+
+/**
+ * Basis for a strategy and related behavior
+ * @author Jurian
+ *
+ */
+public interface Strategy {
+	
+	/**
+	 * The desired action for a given strategy
+	 * @return <code>True</code> to cooperate, <code>False</code> to defect.
+	 */
+	boolean strategyAction();
+	
+	/**
+	 * Create the message in which the agent conveys its strategy
+	 * @param message
+	 * @return
+	 */
+	TournamentMessage reply(TournamentMessage message);
+	
+	/**
+	 * Inform the agent of the result of the game
+	 */
+	void informRoundResult(TournamentMessage message);
+	
+	void informGameEnd(GameResult result);
+	void informGameStart();
+	void informTournamentEnd(TournamentResult result);
+	void informTournamentStart();
+}

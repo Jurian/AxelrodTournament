@@ -1,0 +1,68 @@
+package uu.mas.message;
+
+import java.util.Iterator;
+
+import jade.core.AID;
+import jade.lang.acl.ACLMessage;
+
+@SuppressWarnings( "serial" )
+public class TournamentMessage extends ACLMessage {
+
+	public enum MessageType {
+		AGENT_COOPERATE(ACLMessage.ACCEPT_PROPOSAL),
+		AGENT_DEFECT(ACLMessage.ACCEPT_PROPOSAL),
+		AGENT_REGISTER(ACLMessage.INFORM),
+		TOURNAMENT_START(ACLMessage.INFORM),
+		TOURNAMENT_END(ACLMessage.INFORM),
+		GAME_START(ACLMessage.INFORM),
+		GAME_ROUND(ACLMessage.REQUEST),
+		GAME_END(ACLMessage.INFORM);
+		
+		final int perf;
+		
+		private MessageType(int perf) {
+			this.perf = perf;
+		}
+	}
+	
+	private MessageType type;
+	
+	public TournamentMessage(MessageType type) {
+		super(type.perf);
+		this.type = type;
+	}
+	
+	public TournamentMessage(int perf) {
+		super(perf);
+	}
+
+	public MessageType getType() {
+		return type;
+	}
+	
+	public void setType(MessageType type) {
+		this.type = type;
+		this.setPerformative(type.perf);
+	}
+	
+	public TournamentMessage createReply() {
+		ACLMessage m = super.createReply();
+		TournamentMessage reply = new TournamentMessage(m.getPerformative());
+		
+		reply.setLanguage(m.getLanguage());
+		reply.setOntology(m.getOntology());
+		reply.setProtocol(m.getProtocol());
+		reply.setConversationId(m.getConversationId());
+		reply.setInReplyTo(m.getInReplyTo());
+		reply.setReplyWith(m.getReplyWith());
+		
+		
+		@SuppressWarnings("unchecked")
+		Iterator<AID> iter = m.getAllReceiver();
+		while(iter.hasNext()) {
+			reply.addReceiver(iter.next());
+		}
+		
+		return reply;
+	}
+}

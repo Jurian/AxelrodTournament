@@ -1,0 +1,17 @@
+package uu.mas.gui;
+
+import jade.core.AID;
+
+public class SimpleChartPanel extends ChartPanel {
+
+	public void update(AID player, int score) {
+		if(!map.containsKey(player)) {
+			PlayerTrace pt = new PlayerTrace(player);
+			map.put(player, pt);
+			chart.addTrace(pt.trace);
+			pt.insert(score);
+		} else {
+			map.get(player).insert(score);
+		}
+	}
+}

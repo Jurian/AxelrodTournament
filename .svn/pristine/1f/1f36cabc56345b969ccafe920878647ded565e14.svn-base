@@ -1,0 +1,35 @@
+package uu.mas.strategy;
+
+import uu.mas.game.GameResult;
+import uu.mas.message.TournamentMessage;
+import uu.mas.tournament.TournamentResult;
+
+/**
+ * A strategy that always defects no matter what
+ * @author Jurian
+ *
+ */
+@SuppressWarnings("serial")
+public class AlwaysDefectStrategy extends CyclicStrategy {
+
+	public boolean strategyAction() {
+		return false;
+	}
+
+	@Override
+	public void informRoundResult(TournamentMessage message) {
+		// Do nothing
+	}
+
+	@Override
+	public void informGameEnd(GameResult result) {}
+
+	@Override
+	public void informGameStart() {}
+
+	@Override
+	public void informTournamentEnd(TournamentResult result) {}
+
+	@Override
+	public void informTournamentStart() {}
+}

@@ -1,0 +1,80 @@
+package uu.mas.gui;
+
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.Random;
+
+import javax.swing.JScrollPane;
+
+import info.monitorenter.gui.chart.Chart2D;
+import info.monitorenter.gui.chart.ITrace2D;
+import info.monitorenter.gui.chart.TracePoint2D;
+import info.monitorenter.gui.chart.labelformatters.LabelFormatterNumber;
+import info.monitorenter.gui.chart.traces.Trace2DSimple;
+import info.monitorenter.gui.chart.traces.painters.TracePainterLine;
+import info.monitorenter.util.Range;
+import jade.core.AID;
+import uu.mas.game.GameResult;
+
+public abstract class ChartPanel implements Observer {
+	
+	private final JScrollPane panel;
+	protected final Chart2D chart;
+	protected final Map<AID, PlayerTrace> map;
+	
+	public ChartPanel(){
+		this.map = new HashMap<>();
+		this.chart = new Chart2D();
+		this.chart.setBackground(Color.BLACK);
+		chart.setPreferredSize(new Dimension(768, 512));
+		
+		chart.getAxisX().getAxisTitle().setTitle("Game round");
+		chart.getAxisX().getAxisTitle().setTitleColor(Color.WHITE);
+		chart.getAxisX().setFormatter(new LabelFormatterNumber(new DecimalFormat("#")));
+		
+		chart.getAxisY().getAxisTitle().setTitle("Score");
+		chart.getAxisY().getAxisTitle().setTitleColor(Color.WHITE);
+		chart.getAxisY().setFormatter(new LabelFormatterNumber(new DecimalFormat("#")));
+		
+		panel = new JScrollPane(chart);
+	}
+	
+	public Component getComponent(){
+		return this.panel;
+	}
+	
+	@Override
+	public void update(Observable obs, Object result) {
+		GameResult gr = (GameResult) result;
+		update(gr.getPlayer1(), gr.getScorePlayer1());
+		update(gr.getPlayer2(), gr.getScorePlayer2());
+		chart.invalidate();
+	}
+	
+	public abstract void update(AID player, int score);
+	private static final Random r = new Random();
+	protected class PlayerTrace  {
+		
+		protected final ITrace2D trace;
+		protected int time;
+		
+		public PlayerTrace(AID player) {
+			trace = new Trace2DSimple();
+			trace.setTracePainter(new TracePainterLine());
+			trace.setName(player.getLocalName());
+			trace.setColor(new Color(r.nextFloat(), r.nextFloat(), r.nextFloat(), 0.75f));
+			trace.setStroke(new BasicStroke(1.5f));
+		}
+		
+		void insert(double y) {
+			trace.addPoint(new TracePoint2D(time++, y));
+		}
+	}
+}

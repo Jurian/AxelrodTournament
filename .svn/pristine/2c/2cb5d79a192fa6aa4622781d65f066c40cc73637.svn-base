@@ -1,0 +1,32 @@
+package uu.mas.gui;
+
+import javax.swing.JFrame;
+import javax.swing.JTabbedPane;
+
+public class ViewPort {
+	private final JFrame frame;
+	private final ChartPanel cp1, cp2;
+	private final JTabbedPane tabbedPane;
+	
+	public ViewPort() {
+		this.frame = new JFrame("Tournament charts");
+		this.tabbedPane = new JTabbedPane();
+		this.cp1 = new SimpleChartPanel();
+		this.cp2 = new CumulativeChartPanel();
+		this.tabbedPane.addTab("Score per round", cp1.getComponent());
+		this.tabbedPane.addTab("Cumulative score", cp2.getComponent());
+		this.frame.getContentPane().add(tabbedPane);
+		this.frame.pack();
+	}
+	
+	public void show(){
+		frame.setVisible(true);
+	}
+	
+	public ChartPanel getChart1() {
+		return cp1;
+	}
+	public ChartPanel getChart2() {
+		return cp2;
+	}
+}
